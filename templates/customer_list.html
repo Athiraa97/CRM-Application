@@ -1,0 +1,72 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Customers</h2>
+<div class="mb-3">
+  <a class="btn btn-success btn-sm" href="{% url 'customer_add' %}">
+    <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">
+      person_add
+    </span>
+    Add Customer
+  </a><a class="btn btn-secondary btn-sm" href="{% url 'download_customers_pdf' %}">
+    <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">
+      download
+    </span>
+    Download PDF
+  </a>
+  
+</div>
+
+{% if message %}<div class="alert alert-info">{{ message }}</div>{% endif %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'customer_bulk_upload' %}">
+  {% csrf_token %}
+  {% if bulk_form %}
+    {{ bulk_form.excel_file }} <button class="btn btn-outline-primary">Upload Excel</button>
+  {% else %}
+    <a href="{% url 'customer_bulk_upload' %}" class="btn btn-outline-primary">Bulk Upload</a>
+  {% endif %}
+</form>
+
+<table class="table table-striped mt-3">
+  <thead>
+    <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for c in customers %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ c.first_name }} {{ c.last_name }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.phone }}</td>
+        <td>
+          <a class="btn btn-sm btn-primary" href="{% url 'customer_detail' c.pk %}">
+            <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">
+              visibility
+            </span>
+          </a>
+          
+          <a class="btn btn-sm btn-warning" href="{% url 'customer_edit' c.pk %}">
+            <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">
+              edit
+            </span>
+            
+          </a>
+          
+          <form method="post" style="display:inline" action="{% url 'customer_delete' c.pk %}">{% csrf_token %}
+            <button class="btn btn-sm btn-danger">
+              <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">
+                delete
+              </span>
+              
+            </button>
+            
+          </form>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5">No customers yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

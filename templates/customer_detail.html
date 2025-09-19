@@ -1,0 +1,26 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Customer Details</h2>
+{% if confirm_delete %}
+  <p>Are you sure you want to delete <strong>{{ customer }}</strong>?</p>
+  <form method="post">{% csrf_token %}
+    <button class="btn btn-danger">Yes, delete</button>
+    <a class="btn btn-secondary" href="{% url 'customer_list' %}">Cancel</a>
+  </form>
+{% else %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ customer.first_name }} {{ customer.last_name }}</h5>
+      {% if customer.image %}<img src="{{ customer.image.url }}" style="max-width:200px">{% endif %}
+      <p>{{ customer.email }}</p>
+      <p>{{ customer.phone }}</p>
+      <p>{{ customer.city }}, {{ customer.state }}, {{ customer.country }}</p>
+    </div>
+  </div>
+<a class="btn btn-primary mt-3" href="{% url 'download_customer_pdf_individual' customer.pk %}">
+    Download PDF
+</a>
+  <a class="btn btn-secondary mt-3" href="{% url 'customer_list' %}">Back</a>
+{% endif %}
+{% endblock %}

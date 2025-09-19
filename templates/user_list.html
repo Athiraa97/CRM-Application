@@ -1,0 +1,52 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Users</h2>
+<a class="btn btn-success btn-sm" href="{% url 'user_add' %}">
+  <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">
+    person_add
+  </span>
+  Add User
+</a>
+
+<table class="table table-striped mt-3">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Staff</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+    
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td>
+          {% if u.is_superuser %}
+            Admin
+          {% elif u.is_staff %}
+            Team Lead
+          {% else %}
+            User
+          {% endif %}
+        </td>
+        <td>
+          <a class="btn btn-sm btn-warning" href="{% url 'user_edit' u.pk %}"><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">
+            edit
+          </span></a>
+          <a class="btn btn-sm btn-primary" href="{% url 'user_detail' u.pk %}"><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">
+            visibility
+          </span></a>
+        </td>
+        </td>
+        
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
